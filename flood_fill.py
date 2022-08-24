@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def flood_fill(img):
+    if len(img.shape) > 2:
+        img = img[:,:,0]
     num_rows, num_cols = img.shape
     img_rotulo = np.zeros((num_rows, num_cols), dtype=int)
     current_label = 1        # rótulo atual a ser associado a um novo componente
@@ -32,11 +34,23 @@ def flood_fill(img):
                 current_label += 1
                 
     return img_rotulo
-                
-img = plt.imread('componentes.tiff')
-img = img>0    
 
-img_rotulo = flood_fill(img)
+def find_components(imagesStrings):
+    for imgObj in imagesStrings:
+        separator = "/"
+        img = plt.imread("images" + separator + imgObj["name"])
+        img = img>0    
+        img_rotulo = flood_fill(img)
+        plt.imshow(img_rotulo)
+        plt.savefig("components" + separator + imgObj["name"].split(".")[0] + "_component.jpg")
 
-plt.imshow(img_rotulo)
-plt.show()
+
+imagesStrings = [
+    {"name": "componentes.tiff"},
+    {"name": "shapes.png"},
+    {"name": "squares.png"},
+    {"name": "circles.png"},
+    {"name": "stars.gif"},
+]       
+
+find_components(imagesStrings)
